@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+<meta name="color-scheme" content="dark">
+<title>PyForge</title>
+<style>
+  :root { --bg: #14151a; --panel: #1d1f27; --text: #e8e9ee; --muted: #9a9eaf; --ok: #3ecf8e; --warn: #f5a524; --bad: #ff5c6c; }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; margin: 0; background: var(--bg); color: var(--text);
+    font: 15px/1.4 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; overflow: hidden; }
+  #app { display: flex; flex-direction: column; height: 100%; height: 100dvh; }
+  #bar { display: flex; align-items: center; gap: 12px; padding: 8px 12px; background: var(--panel); flex: none; }
+  #title { font-weight: 600; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .chip { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13px; white-space: nowrap; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--muted); display: inline-block; }
+  .chip-ok .dot { background: var(--ok); } .chip-ok { color: var(--text); }
+  .chip-warn .dot { background: var(--warn); }
+  .chip-bad .dot { background: var(--bad); }
+  button { font: inherit; color: var(--text); background: #2c2f3b; border: 1px solid #3b3f4f; border-radius: 6px; padding: 5px 12px; cursor: pointer; }
+  button:hover { background: #363a49; }
+  #stage { flex: 1 1 0; min-height: 0; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+  canvas { display: block; background: #000; touch-action: none; user-select: none; -webkit-user-select: none; outline: none; }
+  #overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; padding: 16px; background: rgba(10, 11, 14, 0.72); z-index: 5; }
+  #overlay[hidden], #touch[hidden] { display: none; }
+  #overlay-card { max-width: min(680px, 100%); max-height: 100%; overflow: auto; background: var(--panel); border: 1px solid #3b3f4f; border-radius: 10px; padding: 18px 20px; }
+  #overlay-title { margin: 0 0 8px; font-size: 18px; }
+  #overlay-body { margin: 0 0 14px; white-space: pre-wrap; word-break: break-word; font: 13px/1.45 ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; color: var(--muted); }
+  #touch { position: absolute; inset: 0; pointer-events: none; z-index: 4; }
+  .pad, .actions { position: absolute; bottom: calc(14px + env(safe-area-inset-bottom)); display: grid; gap: 8px; pointer-events: none; }
+  .pad { left: 14px; grid-template-columns: repeat(3, 58px); grid-template-rows: repeat(3, 58px); }
+  .actions { right: 14px; grid-template-columns: 76px; }
+  .tbtn { pointer-events: auto; touch-action: none; user-select: none; -webkit-user-select: none; padding: 0; font-size: 22px;
+    background: rgba(255, 255, 255, 0.16); border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 50%; color: #fff; }
+  .tbtn.down { background: rgba(255, 255, 255, 0.4); }
+  .tbtn[data-key="up"] { grid-column: 2; grid-row: 1; } .tbtn[data-key="left"] { grid-column: 1; grid-row: 2; }
+  .tbtn[data-key="right"] { grid-column: 3; grid-row: 2; } .tbtn[data-key="down"] { grid-column: 2; grid-row: 3; }
+  .tbtn[data-key="space"] { width: 76px; height: 76px; font-size: 15px; }
+</style>
+</head>
+<body>
+<div id="app">
+  <header id="bar">
+    <span id="title">PyForge</span>
+    <span id="status" class="chip chip-warn" role="status" aria-live="polite"><i class="dot"></i><span id="status-text">Connecting…</span></span>
+    <button id="restart" type="button" title="Start the game over">Restart</button>
+  </header>
+  <main id="stage">
+    <canvas id="screen" tabindex="0" aria-label="Game screen"></canvas>
+    <div id="touch" hidden>
+      <div class="pad">
+        <button class="tbtn" data-key="up" type="button" aria-label="Up">▲</button>
+        <button class="tbtn" data-key="left" type="button" aria-label="Left">◀</button>
+        <button class="tbtn" data-key="right" type="button" aria-label="Right">▶</button>
+        <button class="tbtn" data-key="down" type="button" aria-label="Down">▼</button>
+      </div>
+      <div class="actions">
+        <button class="tbtn" data-key="space" type="button" aria-label="Action (space)">SPACE</button>
+      </div>
+    </div>
+    <div id="overlay" hidden role="alert">
+      <div id="overlay-card">
+        <h2 id="overlay-title"></h2>
+        <pre id="overlay-body"></pre>
+        <button id="overlay-button" type="button"></button>
+      </div>
+    </div>
+  </main>
+</div>
+<script src="/client.js"></script>
+</body>
+</html>
