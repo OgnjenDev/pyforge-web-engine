@@ -3,6 +3,10 @@ requires = ["setuptools>=61"]
 build-backend = "setuptools.build_meta"
 
 [project]
+authors = [{ name = "Ognjen Dokic", email = "ognjendev1@gmail.com" }]
+
+[project.urls]
+Homepage = "https://github.com/OgnjenDev/pyforge-web-engine/"
 name = "pyforge"
 dynamic = ["version"]
 description = "A tiny Python-powered web game engine: write game logic in Python, play it in the browser."
